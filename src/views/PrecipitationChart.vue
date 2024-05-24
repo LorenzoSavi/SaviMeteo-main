@@ -11,11 +11,11 @@
       ></apexchart>
       <div v-else>Loading data...</div>
     </div>
-    <h2 id="titData">Data Table</h2>
+    <h2 id="titData" >Data Table</h2>
     <div id="table-container">
       <button id="mostra-btn" v-if="!showAll" @click="toggleShowAll">Mostra tutti</button>
-      <button id="mostra-btn" v-if="showAll" @click="toggleShowAll">Mostra meno</button>
-      <button id="anno-btn" @click="addNewYear">Aggiungi Nuovo Anno</button> <br><br><br>
+      <button id="mostra-btn" v-if="showAll" @click="toggleShowAll">Mostra meno</button><br>
+      <button id="anno-btn" class="button" @click="addNewYear">Aggiungi Nuovo Anno</button><br><br>
       <table>
         <thead>
           <tr>
@@ -24,12 +24,12 @@
           </tr>
         </thead>
         <tbody>
-          <template v-for="(row, index) in displayedRows" :key="index">
-            <tr>
-              <td>{{ row.Comune }}</td>
-              <td v-for="year in chartOptions.xaxis.categories" :key="year">{{ row[`Prec_${year}`] }}</td>
-            </tr>
-          </template>
+          <tr v-for="(row, index) in displayedRows" :key="index">
+            <td>{{ row.Comune }}</td>
+            <td v-for="year in chartOptions.xaxis.categories" :key="year">
+              <input type="number" v-model="row[`Prec_${year}`]" @change="ensureNonEmpty(row, `Prec_${year}`)">
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -162,7 +162,7 @@ export default {
         const formattedRow = { Comune: row.Comune }
         Object.keys(row).forEach(key => {
           if (key.startsWith('Prec_')) {
-            formattedRow[key] = isNaN(row[key]) ? '-' : parseFloat(row[key]).toFixed(2)
+            formattedRow[key] = isNaN(row[key]) || parseFloat(row[key]) < 1 ? 1 : parseFloat(row[key]).toFixed(2)
           }
         })
         return formattedRow
@@ -181,7 +181,7 @@ export default {
         const lastYearPrec = parseFloat(row[`Prec_${lastYear}`])
         const variation = ((Math.random() - 0.5) * 300).toFixed(2) 
         let newPrec = lastYearPrec + parseFloat(variation)
-        newPrec = Math.max(0, Math.min(1100, newPrec)) 
+        newPrec = Math.max(1, Math.min(1000, newPrec)) // Imposta il massimo a 1000
         row[`Prec_${newYear}`] = newPrec.toFixed(2)
       })
 
@@ -190,11 +190,23 @@ export default {
         serie.data.push(newPrec)
       })
     },
-    showAllRows() {
-      this.showAll = true
+    ensureNonEmpty(row, key) {
+      if (!row[key]) {
+        row[key] = 1; 
+      } else if (parseFloat(row[key]) < 1) {
+        row[key] = 1; 
+      }
+      this.updateSeriesData();
     },
-    showLessRows() {
-      this.showAll = false
+    updateSeriesData() {
+      
+      const newData = this.tableData.map(row => {
+        return {
+          name: row.Comune,
+          data: this.chartOptions.xaxis.categories.map(year => parseFloat(row[`Prec_${year}`]))
+        }
+      });
+      this.series.splice(0, this.series.length, ...newData);
     }
   }
 }
@@ -215,27 +227,31 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
-
+th, td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  border: none;
+}
 #mostra-btn{
   position: absolute;
   right: 10px;
 
+}
+#titData{
+  position: absolute;
+  left: 47.5%;
 }
 
 #anno-btn{
   position: absolute;
   left: 10px;
   top: 0px;
-}
-
-#titData{
-  position: absolute;
-  left: 47.5%;
-}
-th, td {
-  padding: 8px;
-  text-align: center;
-  border: 1px solid #ddd;
 }
 th {
   background-color: #f2f2f2;

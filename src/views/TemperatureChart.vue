@@ -11,11 +11,12 @@
       ></apexchart>
       <div v-else>Loading data...</div>
     </div>
-    <h2 id="titData">Data Table</h2>
+    <h2 id="titData" >Data Table</h2>
     <div id="table-container">
       <button id="mostra-btn" v-if="!showAll" @click="toggleShowAll">Mostra tutti</button>
-      <button id="mostra-btn" v-if="showAll" @click="toggleShowAll">Mostra meno</button>
-      <button id="anno-btn" @click="addNewYear">Aggiungi Nuovo Anno</button> <br><br><br>
+      <button id="mostra-btn" v-if="showAll" @click="toggleShowAll">Mostra meno</button><br>
+      <button id="anno-btn" @click="addNewYear">Aggiungi Nuovo Anno</button> <br><br>
+
       <table>
         <thead>
           <tr>
@@ -24,9 +25,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, index) in displayedData" :key="index">
+          <tr v-for="(row, rowIndex) in displayedData" :key="rowIndex">
             <td>{{ row.Comune }}</td>
-            <td v-for="year in chartOptions.xaxis.categories" :key="year">{{ row[`Temp_${year}`] }}</td>
+            <td v-for="year in chartOptions.xaxis.categories" :key="year">
+              <input
+                type="number"
+                v-model.number="row[`Temp_${year}`]"
+                @change="updateChartData(row.Comune, year, row[`Temp_${year}`])"
+              />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -189,6 +196,13 @@ export default {
         const newTemp = parseFloat(this.tableData[index][`Temp_${newYear}`])
         serie.data.push(newTemp)
       })
+    },
+    updateChartData(comune, year, newValue) {
+      const serie = this.series.find(s => s.name === comune)
+      const yearIndex = this.chartOptions.xaxis.categories.indexOf(year)
+      if (serie && yearIndex >= 0) {
+        serie.data[yearIndex] = parseFloat(newValue)
+      }
     }
   }
 }
@@ -203,22 +217,31 @@ export default {
   margin-top: 20px;
   overflow-x: auto;
   position: relative;
+
 }
 table {
   width: 100%;
   border-collapse: collapse;
-  
 }
 th, td {
   padding: 8px;
   text-align: center;
   border: 1px solid #ddd;
 }
-
+input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  border: none;
+}
 #mostra-btn{
   position: absolute;
   right: 10px;
 
+}
+#titData{
+  position: absolute;
+  left: 47.5%;
 }
 
 #anno-btn{
@@ -226,12 +249,6 @@ th, td {
   left: 10px;
   top: 0px;
 }
-
-#titData{
-  position: absolute;
-  left: 47.5%;
-}
-
 th {
   background-color: #f2f2f2;
 }

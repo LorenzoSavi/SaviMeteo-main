@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TemperatureChart from '../views/TemperatureChart.vue'
 import PrecipitationChart from '../views/PrecipitationChart.vue'
+import TopView from '../views/TopView.vue'
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/precipitation',
     name: 'PrecipitationChart',
     component: PrecipitationChart
+  },
+  {
+    path: '/topcitta',
+    name: 'TopView',
+    component: TopView
   }
 ]
 

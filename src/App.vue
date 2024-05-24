@@ -4,6 +4,8 @@
       <ul>
         <li><router-link to="/">Temperature</router-link></li>
         <li><router-link to="/precipitation">Precipitazioni</router-link></li>
+        <li><router-link to="/topcitta">Top 10 Città</router-link></li>
+
       </ul>
     </nav>
     <div class="content">

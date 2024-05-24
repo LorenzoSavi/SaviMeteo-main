@@ -2,7 +2,7 @@
     <div class="container">
         <h1>Top 10 Città Calde</h1>
         <div class="select-container">
-            <label for="year-select">Select Year: </label>
+            <label for="year-select">Seleziona l'anno: </label>
             <select id="year-select" v-model="selectedYear" @change="updateChart">
                 <option v-for="year in years" :key="year">{{ year }}</option>
             </select><br>
@@ -76,7 +76,8 @@ export default {
                     style: {
                         color: '#444'
                     }
-                }
+                },
+                colors: this.generateBlueScale(10)
             },
             showAll: false,
             currentYear: 2021,
@@ -178,6 +179,19 @@ export default {
 
         adjustChartSize() {
             this.chartHeight = window.innerWidth > 1200 ? '600px' : '400px'
+        },
+        generateBlueScale(steps) {
+            const startColor = [173, 216, 230]; // Light blue (rgb(173, 216, 230))
+            const endColor = [0, 0, 139]; // Dark blue (rgb(0, 0, 139))
+            const colorScale = [];
+
+            for (let i = 0; i < steps; i++) {
+                const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * (i / (steps - 1)));
+                const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * (i / (steps - 1)));
+                const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * (i / (steps - 1)));
+                colorScale.push(`rgb(${r}, ${g}, ${b})`);
+            }
+            return colorScale;
         }
     }
 }
@@ -193,7 +207,6 @@ export default {
     margin-top: 20px;
     overflow-x: auto;
     position: relative;
-
 }
 
 table {
@@ -216,20 +229,6 @@ input[type="number"] {
 }
 
 
-
-button {
-    margin-top: 10px;
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
 
 @media (max-width: 600px) {
     #chart {

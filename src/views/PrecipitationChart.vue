@@ -181,7 +181,7 @@ export default {
         const lastYearPrec = parseFloat(row[`Prec_${lastYear}`])
         const variation = ((Math.random() - 0.5) * 300).toFixed(2) 
         let newPrec = lastYearPrec + parseFloat(variation)
-        newPrec = Math.max(1, Math.min(1000, newPrec)) // Imposta il massimo a 1000
+        newPrec = Math.max(1, Math.min(1000, newPrec)) 
         row[`Prec_${newYear}`] = newPrec.toFixed(2)
       })
 
@@ -259,14 +259,15 @@ th {
 button {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #6ca3d6;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 4px;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #345069;
+  color: white;
 }
 @media (max-width: 600px) {
   #chart {

@@ -28,9 +28,17 @@ body {
   padding: 0;
 }
 nav {
+  position: fixed;
+  margin-top: -10px;
+  left: 0;
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  top:10px;
+  padding: 10px 0;
+  background-color: rgb(179, 226, 221);
+  box-shadow: 5px 10px 18px rgb(179, 226, 221);
+  z-index: 9999;
 }
 nav ul {
   list-style-type: none;
@@ -44,15 +52,15 @@ nav li {
 }
 nav a {
   text-decoration: none;
-  color: #42b983;
+  color: #5b7d9c;
   font-weight: bold;
   padding: 10px 20px;
-  border: 2px solid #42b983;
+  border: 2px solid #2dc5da;
   border-radius: 5px;
   transition: background-color 0.3s, color 0.3s;
 }
 nav a:hover {
-  background-color: #42b983;
+  background-color: #5b7d9c;
   color: white;
 }
 .content {

@@ -255,14 +255,15 @@ th {
 button {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #6ca3d6;
   color: white;
   border: none;
   cursor: pointer;
   border-radius: 4px;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #345069;
+  color: rgb(255, 255, 255);
 }
 @media (max-width: 600px) {
   #chart {
